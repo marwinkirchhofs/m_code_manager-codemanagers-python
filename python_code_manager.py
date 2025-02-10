@@ -66,17 +66,20 @@ class PythonCodeManager(code_manager.CodeManager):
             self._write_template(template_out, s_target_file)
 
 
-    def _command_vimspector(self, **kwargs):
-
-        app_name = os.path.dirname(os.path.realpath(__file__))
+    def _command_vimspector(self, main="", **kwargs):
 
         # DETERMINE MAIN FILE
         # if main.py exists, pass that as the main file. Otherwise select 
         # <app_name>.py.
-        if os.path.isfile("main.py"):
-            program_main = "main.py"
+        if main:
+            app_name = main
+            program_main = main if main.endswith(".py") else main + ".py"
         else:
-            program_main = app_name + ".py"
+            app_name = os.path.basename(os.getcwd())
+            if os.path.isfile("main.py"):
+                program_main = "main.py"
+            else:
+                program_main = app_name + ".py"
 
         s_target_file = ".vimspector.json"
 
